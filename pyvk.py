@@ -7,15 +7,10 @@ Make sure you have created your own application ID and access token before usage
 Alexey Knorre, 13.02.2016
 
 V.2
-*Changelog*
 
-- refactoring, now it all in functions
-- created cooldown for API, profiles are queried in chunks
-- dicts inside list are now unzipped
-
-*External dependencies*:
+*External dependencies*
 vkontakte (installing in cmd: "pip install vkontakte". Make sure
-you are using Anaconda Python distribution, otherwise pip won't be working.)
+you are using Anaconda Python distribution, otherwise pip may not be working.)
 
 *TODO*
 - replace aliases in fields (f.e., 1 for Moscow or 2 for SPb in field "city")
