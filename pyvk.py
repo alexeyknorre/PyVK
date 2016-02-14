@@ -33,18 +33,6 @@ basic_parameters=["uid","first_name","last_name"]
 parameters = "nickname, sex, bdate, country, city, home_town, deactivated, has_mobile, site, education, universities, schools, status, occupation, relatives, relations, personal, career, military"
 result_file = "./results.csv"
 
-# Main commands 
-
-# For particular accounts -- write down ids inside the list:
-#ids = [1, 2, 3]
-
-# For random accounts
-ids = random_ids(500)
-
-
-response = get_data(ids)
-save_data(response)
-
 ### CODE
 
 
@@ -135,3 +123,15 @@ def save_data(response, result_file=result_file):
                     person_data.append('')
             writer.writerow(person_data)
     print "Successfully saved."
+
+
+# Main commands 
+
+# For particular accounts -- write down ids inside the list:
+#ids = [1, 2, 3]
+
+# For random accounts
+ids = random_ids(500)
+
+response = get_data(ids)
+save_data(response)
