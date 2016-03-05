@@ -275,7 +275,7 @@ plot_sex_fill.figure.savefig('C:/Users/Alexey/Documents/VK analysis/plot_sex_fil
 # Заполняемость по семейному положению
 
 temp_df = df
-
+temp_df["fill_count"] = len(temp_df.columns) - temp_df.isnull().sum(axis=1)
 temp_df["relation"] = temp_df["relation"].replace([-99.0],[None])
 plot_fill_relation = temp_df.boxplot("fill_count", by='relation', figsize=(20,10))
 plot_fill_relation.set_xlabel(u"Семейное положение")
