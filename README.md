@@ -2,12 +2,15 @@
 
 Script for downloading and parsing public userdata from VK.com.
 Make sure you have created your own application ID and access token before usage.
-Alexey Knorre, 13.02.2016
-V.2
+
+V.3, 5.3.2016
 ## Features
 
-- cooldown for API access, profiles are queried in chunks
+- profiles are queried in chunks
+- repeat query in case of SSL fail
 - dicts inside lists are unzipped in flat mode
+- retrieve friends count, though very slowly
+
 ## External dependencies
 vkontakte (installing in cmd: "pip install vkontakte". Make sure
 you are using Anaconda Python distribution, otherwise pip may not be working.)
@@ -17,3 +20,4 @@ you are using Anaconda Python distribution, otherwise pip may not be working.)
 by collecting such aliases and then quering VK API for their meaning (see 
 VK API docs for exact query)
 - test cases (not sure if there are gaps in results due to complicated dicts unzipping)
+-
