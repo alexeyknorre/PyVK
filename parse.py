@@ -4,14 +4,15 @@
 Script for downloading and parsing public userdata from VK.com.
 Make sure you have created your own application ID and access token before usage.
 
-Alexey Knorre, 13.02.2016
+Alexey Knorre, 5.03.2016
 
-V.2
+V.3
 *Changelog*
 
 - refactoring, now it all in functions
-- created cooldown for API, profiles are queried in chunks
+- profiles are queried in chunks
 - dicts inside list are now unzipped
+- can retrieve friends count, but it is very slow
 
 *External dependencies*:
 vkontakte (installing in cmd: "pip install vkontakte". Make sure
@@ -24,16 +25,6 @@ VK API docs for exact query)
 
 """
 
-
-# Getting token
-# https://oauth.vk.com/authorize?client_id=5052855&display=page&redirect_uri=http://vk.com&scope=offline
-#
-# https://oauth.vk.com/access_token?client_id=5052855&client_secret=mwSTOnYUXQmBaq1lJH0I&redirect_uri=http://vk.com&code=КОД_по_ссылке_выше
-
-# token : d26e0cf3cf03ed8b8aed1ba0bdc13978c0a4b869548a8c799e2b94239dd9216b2e986d9768cb9811152d7
-# user id: 89250961
-
-
 import csv
 import random
 import time
@@ -43,7 +34,7 @@ import vkontakte
 
 # Input variables
 
-token = "d26e0cf3cf03ed8b8aed1ba0bdc13978c0a4b869548a8c799e2b94239dd9216b2e986d9768cb9811152d7"
+token = "YOUR_TOKEN"
 
 basic_parameters=["uid","first_name","last_name"]
 parameters = "nickname, sex, bdate, country, city, home_town, deactivated, last_seen, has_mobile, site, education, universities, schools, status, occupation, relatives, relations, personal, career, military, contacts, relation, connections, exports, wall_comments, activities, interests, music, movies, tv, books, games, about, quotes"
