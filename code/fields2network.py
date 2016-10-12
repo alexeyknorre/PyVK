@@ -81,7 +81,7 @@ def get_arcs(df, vertices):
             other_elements = elements
             other_elements.remove(element)
             vertice_from = vertices.index(element)
-            if other_elements != None:
+            if other_elements is not None:
                 for other_element in other_elements:
                     if other_element not in vertices:
                         continue
