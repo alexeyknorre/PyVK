@@ -6,8 +6,6 @@ Created on Fri Aug 26 13:39:14 2016
 """
 import os
 
-directory = '../results'
-
 # Create directory to save results
 if not os.path.exists(directory):
     os.makedirs(directory)

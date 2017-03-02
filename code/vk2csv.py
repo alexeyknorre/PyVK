@@ -6,7 +6,7 @@ Script for downloading, parsing and saving to CSV public user data from VK.com.
 
 
 """
-
+import os
 import csv
 import random
 import requests
@@ -19,15 +19,26 @@ result_file = "../results/profiles.csv"
 
 response_file = "../results/response.txt"
 
+#parameters = ""
+parameters = "sex, bdate, country, city, deactivated, last_seen, has_mobile, site, education, universities, schools, status, relatives, relations, personal, career, contacts, exports, relation, connections, exports, wall_comments, activities, interests, music, movies, tv, books, games, about, quotes, has_photo, can_post, can_see_all_posts, can_see_audio, can_write_private_message, can_send_friend_request, followers_count"
+
 
 ### CODE
 
 # Main functions
 
-def vk2csv(parameters, number_of_ids):
-    ids = random_ids(number_of_ids)
-    get_data(ids, parameters)
-    process_data()
+def vk2csv(number_of_ids, result_file=result_file, parameters = parameters,
+           response_file=response_file, delete_response=False):
+    if isinstance(number_of_ids, list):
+        ids = number_of_ids
+    else:
+        ids = random_ids(number_of_ids)
+        with open("../results/ids.txt", 'w') as f:
+            f.write(str(ids))
+            
+        
+    get_data(ids, parameters, response_file)
+    process_data(result_file, response_file, delete_response)
 
 
 # Selecting random ids to parse
@@ -42,17 +53,17 @@ def random_ids(n):
 
 
 # Getting data from server. Chunk query with cooldown and repeat in case of SSL fail are implemented
-def get_data(ids, parameters, threshold=400, count_friends=False):
+def get_data(ids, parameters, response_file, threshold=200):
     def query(response):
         try:
             response = requests.get("https://api.vk.com/method/users.get?user_ids=" + str_ids[:-1] +
                                     "&fields=" + parameters).json()
         except:
-            pass  # print("Got error on " + str(count) + " profiles, repeating...")
-            # response = query(response)
+            print("Got error on " + str(count) + " profiles, repeating...")
+            response = query(response)
         return response
 
-    print("Quering VK API...")
+    #print("Quering VK API...")
     str_ids = ""
     count = 0
     response = []
@@ -62,12 +73,11 @@ def get_data(ids, parameters, threshold=400, count_friends=False):
         count += 1
         if count % threshold == 0 or count == len(ids):
             response = query(response)
-            save_response(response)
+            save_response(response, response_file)
             str_ids = ""
             print("Got " + str(count) + " profiles...")
             response = []
-    print("Data acquired.")
-
+    #print("Data acquired.")
 
 # Function for flattening nested dictionaries.
 # isInstance checks whether the data structure of a particular type
@@ -109,8 +119,8 @@ def construct_header(response, basic_parameters=basic_parameters):
 
 # Parsing data and saving in CSV file
 
-def save_response(response, output=response_file):
-    with open(output, 'a') as f:
+def save_response(response,response_file):
+    with open(response_file, 'a') as f:
         for s in response["response"]:
             s = str(s).encode('utf-8') + str("\n").encode("utf-8")
             f.write(str(s))
@@ -118,16 +128,16 @@ def save_response(response, output=response_file):
             #    output.write(response)
 
 
-def process_data(response_file=response_file, result_file=result_file):
-    print "Loading response into memory..."
+def process_data(result_file, response_file, delete_response):
+    #print "Loading response into memory..."
     response = []
     with open(response_file, 'r') as f:
         for line in f:
             response.append(ast.literal_eval(line.rstrip('\n')))
     # response = ast.literal_eval(response)
-    print "Preparing headers..."
+    #print "Preparing headers..."
     fieldnames = construct_header(response)
-    print "Saving data into CSV..."
+    #print "Saving data into CSV..."
     with open(result_file, "wb") as output:
         writer = csv.writer(output, quotechar='"', quoting=csv.QUOTE_ALL)
         writer.writerow(fieldnames)
@@ -143,4 +153,6 @@ def process_data(response_file=response_file, result_file=result_file):
                 else:
                     person_data.append('')
             writer.writerow(person_data)
-    print "Successfully saved."
+    if delete_response:
+        os.remove(response_file)
+    #print "Successfully saved."
